@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import it.polito.tdp.newufosightings.model.Adiacenza;
+import it.polito.tdp.newufosightings.model.Avvistamento;
 import it.polito.tdp.newufosightings.model.Sighting;
 import it.polito.tdp.newufosightings.model.State;
 
@@ -112,6 +113,33 @@ public class NewUfoSightingsDAO {
 
 			while (rs.next()) {
 				Adiacenza a = new Adiacenza(stati.get(rs.getString("state1")), stati.get(rs.getString("state2")), rs.getInt("peso"));
+				result.add(a);;
+			}
+
+			conn.close();
+			return result;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Errore connessione al database");
+			throw new RuntimeException("Error Connection Database");
+		}
+	}
+
+	public List<Avvistamento> avvistamenti(String shape, int anno) {
+		this.loadAllStates();
+		String sql = "SELECT state, `datetime` FROM sighting WHERE shape=? and YEAR(`datetime`)=? ";
+		List<Avvistamento> result = new ArrayList<>();
+
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, shape);
+			st.setInt(2, anno);
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				Avvistamento a = new Avvistamento(stati.get(rs.getString("state").toUpperCase()), rs.getTimestamp("datetime").toLocalDateTime());
 				result.add(a);;
 			}
 

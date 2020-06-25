@@ -94,6 +94,8 @@ public class FXMLController {
 
     @FXML
     void doSimula(ActionEvent event) {
+    	txtResult.clear();
+    	txtResult.appendText(model.getDEFCON(Integer.parseInt(txtT1.getText()), Double.parseDouble(txtAlfa.getText()), cmbBoxForma.getValue(), Integer.parseInt(txtAnno.getText()))+"");
 
     }
 
